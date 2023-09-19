@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <title>Formulário de Origem</title>
+  </head>
+  <body>
+    <form method="POST" action="/process_form">
+      <label for="origin">Origem:</label>
+      <input type="text" id="origin" name="origin" required /><br /><br />
+
+      <label for="destiny">Destino:</label>
+      <input type="text" id="destiny" name="destiny" required /><br /><br />
+
+      <label for="limit">Limite:</label>
+      <input type="number" id="limit" name="limit" /><br /><br />
+
+      <label for="search_type">Tipo de Busca:</label>
+      <select id="search_type" name="search_type" required>
+        <option value="1">Busca em Amplitude</option>
+        <option value="2">Busca em Profundidade</option>
+        <option value="3">Busca em Profundidade L</option>
+        <option value="4">Busca em Aprofundidade I</option>
+        <option value="5">Busca em bidirecional</option></select
+      ><br /><br />
+
+      <input type="submit" value="Enviar" />
+    </form>
+  </body>
+</html>
