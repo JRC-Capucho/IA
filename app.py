@@ -1,4 +1,3 @@
-from re import S
 from flask import Flask, render_template, request
 from Search import Search
 
@@ -56,19 +55,19 @@ def process_form():
     if search_type == "3":
         path_prof = []
         for destiny in destinys:
-            aux = sol.prof_limitada(origin, destiny, limit, nodes, graph)
+            aux = sol.prof_limitada(origin, destiny, int(limit), nodes, graph)
             if isinstance(aux, list):
                 path_prof += aux
                 del path_prof[len(path_prof) - 1]
             else:
-                print(aux)
+                print("")
             origin = destiny
         return str(path_prof)
 
     if search_type == "4":
         path_prof = []
         for destiny in destinys:
-            aux = sol.aprof_iterativo(origin, destiny, limit, nodes, graph)
+            aux = sol.aprof_iterativo(origin, destiny, int(limit), nodes, graph)
             if isinstance(aux, list):
                 path_prof += aux
                 del path_prof[len(path_prof) - 1]
@@ -80,8 +79,11 @@ def process_form():
 
     if search_type == "5":
         path_prof = []
+        destiny_aux = []
         for destiny in destinys:
+            destiny_aux = []
             aux = sol.bidirecional(origin, destiny, nodes, graph)
+            destiny_aux.append(destiny)
             if isinstance(aux, list):
                 path_prof += aux
                 del path_prof[len(path_prof) - 1]
@@ -89,7 +91,9 @@ def process_form():
                 print(aux)
             origin = destiny
 
+        path_prof += destiny_aux
         return str(path_prof)
+
     return "Error"
 
 

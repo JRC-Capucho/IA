@@ -1,5 +1,24 @@
+import random as rd
 import sys
+
+import numpy as np
+
 from Search import Search
+
+
+def gera_H(n):
+    aux = Search()
+    h = np.zero((n, n), int)
+    i = 0
+    for no_origem in nodes:
+        j = 0
+        for no_destino in nodes:
+            if no_origem != no_destino:
+                cam, v = aux.custom_uniform(no_origem, no_destino)
+                h[i][j] = v * rd.uniform(0, 1)
+            j += 1
+        i += 1
+    return h
 
 
 def creates(file):
