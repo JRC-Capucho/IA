@@ -2,13 +2,12 @@ from Node import Node
 
 
 class LinkedList(object):
-    def __init__(self):
-        self.head = None
-        self.tail = None
+    head = None
+    tail = None
 
-    # Insert first
-    def push(self, status, value, value2, father):
-        new_node = Node(father, status, value, value2, None, None)
+    # INSERE NO INÍCIO DA LISTA
+    def push(self, status, v1, v2, father):
+        new_node = Node(father, status, v1, v2, None, None)
         if self.head == None:
             self.tail = new_node
         else:
@@ -16,9 +15,9 @@ class LinkedList(object):
             self.head.prev = new_node
         self.head = new_node
 
-    # Insert last
-    def shift(self, status, value, value2, father):
-        new_node = Node(father, status, value, value2, None, None)
+    # INSERE NO FIM DA LISTA
+    def shift(self, status, v1, v2, father):
+        new_node = Node(father, status, v1, v2, None, None)
 
         if self.head is None:
             self.head = new_node
@@ -27,42 +26,43 @@ class LinkedList(object):
             new_node.prev = self.tail
         self.tail = new_node
 
-    # Remove first
+    # INSERE NO FIM DA LISTA
+    def push_x(self, status, v1, v2, father):
+        # se lista estiver vazia
+        if self.head is None:
+            self.push(status, v1, v2, father)
+        else:
+            current = self.head
+            while current.value < v1:
+                current = current.next_node
+                if current is None:
+                    break
+
+            if current == self.head:
+                self.push(status, v1, v2, father)
+            else:
+                if current is None:
+                    self.shift(status, v1, v2, father)
+                else:
+                    new_node = Node(father, status, v1, v2, None, None)
+                    aux = current.prev
+                    aux.next_node = new_node
+                    new_node.prev = aux
+                    current.prev = new_node
+                    new_node.next_node = current
+
+    # REMOVE NO INÍCIO DA LISTA
     def pop(self):
         if self.head is None:
             return None
         else:
-            node = self.head
+            nodes = self.head
             self.head = self.head.next_node
             if self.head is not None:
                 self.head.prev = None
             else:
                 self.tail = None
-            return node
-
-    # Remove first
-    def push_x(self, status, value, value2, father):
-        if self.head is None:
-            self.push(status, value, value2, father)
-        else:
-            nodes = self.head
-            while current.value < value:
-                current = current.next_node
-                if current is None:
-                    break
-
-        if current == self.head:
-            self.push(status, value, value2, father)
-        else:
-            if current is None:
-                self.shift(status, value, value2, father)
-            else:
-                new_node = Node(father, status, value, value2, None, None)
-                aux = current.prev
-                aux.new_node = new_node
-                new_node.prev = aux
-                current.prev = new_node
-                new_node.next_node = current
+            return nodes
 
     # REMOVE NO FIM DA LISTA
     def unshift(self):
@@ -77,22 +77,24 @@ class LinkedList(object):
                 self.head = None
             return nodes
 
-    # RETORNA O PRIMEIRO DA LISTA
-    def first(self):
-        return self.head
-
-    # RETORNA O ÚLTIMO DA LISTA
-    def last(self):
-        return self.tail
-
-    # VERIFICA SE LISTA ESTÁ VAZIA
     def empty(self):
         if self.head is None:
             return True
         else:
             return False
 
-    # EXIBE O CONTEÚDO DA ARVORE
+    def show_list(self):
+        aux = self.head
+        result = []
+        while aux != None:
+            row = []
+            row.append(aux.status)
+            row.append(aux.value)
+            result.append(row)
+            aux = aux.next_node
+
+        return result
+
     def show_tree(self):
         current = self.tail
         path = []
@@ -102,71 +104,34 @@ class LinkedList(object):
         path.append(current.status)
         return path
 
-    # EXIBE O CONTEÚDO DA ARVORE 1
     def show_tree_one(self, status):
         current = self.head
         while current.status != status:
             current = current.next_node
 
         path = []
-
+        current = current.father
         while current.father is not None:
             path.append(current.status)
             current = current.father
         path.append(current.status)
         return path
 
-    # EXIBE O CONTEÚDO DA ARVORE 2
-    def show_tree_two(self, status, value):
+    def show_tree_two(self, status, v1):
         current = self.tail
-        while current.status != status or current.value != value:
+
+        while current.status != status or current.value != v1:
             current = current.prev
 
         path = []
-
         while current.father is not None:
             path.append(current.status)
             current = current.father
-
         path.append(current.status)
         return path
 
-    # EXIBE O CONTEÚDO DA LISTA
-    def show_list(self):
-        aux = self.head
-        result = []
-        while aux != None:
-            temp = []
-            temp.append(aux.status)
-            temp.append(aux.value)
-            result.append(row)
-            aux = aux.next_node
+    def first(self):
+        return self.head
 
-        return result
-
-    # EXIBE O path ENCONTRADO
-    def show_path(self):
-        current = self.tail
-        path = []
-
-        while current.father is not None:
-            path.append(current.status)
-            current = current.father
-
-        path.append(current.status)
-        path = path[::-1]
-        return path
-
-    # EXIBE O CAMINHO ENCONTRADO (BIDIRECIONAL)
-    def show_path_b(self, valor):
-        current = self.head
-        while current.status != valor:
-            current = current.next_node
-
-        caminho = []
-        current = current.father
-        while current.father is not None:
-            caminho.append(current.status)
-            current = current.father
-        caminho.append(current.status)
-        return caminho
+    def last(self):
+        return self.tail
