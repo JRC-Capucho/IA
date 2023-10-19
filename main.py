@@ -6,107 +6,49 @@ import numpy as np
 from Search import Search
 
 
-def gera_H(n):
+def gera_H(n, nodes, graph):
     aux = Search()
-    h = np.zero((n, n), int)
+    h = np.zeros((n, n), int)
     i = 0
     for no_origem in nodes:
         j = 0
         for no_destino in nodes:
             if no_origem != no_destino:
-                cam, v = aux.custom_uniform(no_origem, no_destino)
+                cam, v = aux.custom_uniform(no_origem, no_destino, nodes, graph)
                 h[i][j] = v * rd.uniform(0, 1)
             j += 1
         i += 1
     return h
 
 
-def creates(file):
-    f = open(file, "r")
-
-    i = 0
-    nodes = []
-    graph = []
-
-    for str1 in f:
-        str1 = str1.strip("\n")
-        str1 = str1.split(",")
-        if i == 0:
-            nodes = str1
-        else:
-            graph.append(str1)
-
-        i += 1
-
-    return nodes, graph
-
-
-nodes, graph = creates("ruas.txt")
-
 sol = Search()
+
 path = []
 
-origin = "Rua1"
-destinys = ["Rua10", "Rua5", "Rua15"]
+sol = Search()
 
-if origin not in nodes:
-    print("Rua não está na lista")
-    sys.exit()
+inicio = "ARAD"
+fim = "BUCARESTE"
 
-for node in nodes:
-    if node not in nodes:
-        print("Rua não está na lista")
-        sys.exit()
+h = gera_H(len(nos), nos, grafo)
 
+caminho, custo = sol.custom_uniform("ARAD", "BUCARESTE", nos, grafo)
 
-# path = sol.prof_limitada(origin, destiny, 3, nodes, graph)
-# path = sol.aprof_iterativo(origin, destiny, 5, nodes, graph)
-# path = sol.bidirecional(origin, destiny, nodes, graph)
+print("Custo Uniform: ", caminho[::-1], "\nCusto do Caminho: ", custo)
 
-path = sol.amplitude(origin, destinys, nodes, graph)
+caminho, custo = sol.greedy("ARAD", "BUCARESTE", nos, grafo, h)
 
-print("\n*****AMPLITUDE*****\n", path)
+print("Greedy: ", caminho[::-1], "\nCusto do Caminho: ", custo)
 
-path_prof = []
-for destiny in destinys:
-    path_prof += sol.profundidade(origin, destiny, nodes, graph)
-    del path_prof[len(path_prof) - 1]
-    origin = destiny
+caminho, custo = sol.a_star("ARAD", "BUCARESTE", nos, grafo, h)
 
-print("\n*****PROFUNDIDA*****\n", path_prof)
-#
-path_prof = []
-for destiny in destinys:
-    aux = sol.prof_limitada(origin, destiny, 3, nodes, graph)
-    if isinstance(aux, list):
-        path_prof += aux
-        del path_prof[len(path_prof) - 1]
-    else:
-        print(aux)
-    origin = destiny
+print("A_estrela: ", caminho[::-1], "\nCusto do Caminho: ", custo)
 
-print("\n*****PROFUNDIDA LIMIT*****\n", path_prof)
-#
-path_prof = []
-for destiny in destinys:
-    aux = sol.aprof_iterativo(origin, destiny, 10, nodes, graph)
-    if isinstance(aux, list):
-        path_prof += aux
-        del path_prof[len(path_prof) - 1]
-    else:
-        print(aux)
-    origin = destiny
+ind_inicio = nos.index("ARAD")
+ind_fim = nos.index("BUCARESTE")
 
-print("\n*****APROF ITERATIVA*****\n", path_prof)
+limit = h[ind_inicio][ind_fim]
 
-path_prof = []
-for destiny in destinys:
-    aux = sol.bidirecional(origin, destiny, nodes, graph)
-    if isinstance(aux, list):
-        path_prof += aux
-        del path_prof[len(path_prof) - 1]
-    else:
-        print(aux)
-    origin = destiny
+caminho, custo = sol.aia_estrela("ARAD", "BUCARESTE", nos, grafo, limit, h)
 
-print("\n*****BIDIRECIONAL*****\n", path_prof)
+print("AIA_estrela: ", caminho[::-1], "\nCusto do Caminho: ", custo)
